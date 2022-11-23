@@ -20,6 +20,7 @@ phases:
       - go test      
 
   build:
+    on-failure: CONTINUE
     commands:
       - go build -o app
       - echo gopath $GOPATH
@@ -35,11 +36,13 @@ phases:
       #- ls -la
       - currentphase="govulncheck"
       # with -json option gave exit code 137 -> out of memory!
-      - govulncheck ./...      
+      - govulncheck -json ./...      
       - echo after govulncheck...
       #- cd $workdir      
       - pwd
       - ls -la      
+    finally:
+      - echo will continue process even if there are errors.
 
 artifacts:
   files:
