@@ -9,7 +9,6 @@ phases:
       # install govulncheck to scan code
       - echo install govulncheck
       - go install golang.org/x/vuln/cmd/govulncheck@latest   
-      #- cp $GOPATH/bin/govulncheck /usr/local/bin/
       - workdir=`pwd`
       - echo $workdir
       - ls -la       
@@ -20,34 +19,22 @@ phases:
       - go test      
 
   build:
-    on-failure: CONTINUE
     commands:
       - go build -o app
       - echo gopath $GOPATH
       # Vulnerability detection using govulncheck
-      #- govulncheck
       - which govulncheck
-      #- .$GOPATH/bin/govulncheck ./...
       - echo trying to execute govulncheck on project
-      #- .$GOPATH/bin/govulncheck -json ./...
-      #- govulncheck -json ./...
-      #- cd $GOPATH/bin      
-      #- pwd
-      #- ls -la
-      - currentphase="govulncheck"
-      # with -json option gave exit code 137 -> out of memory!
-      - govulncheck -json ./...      
-      - echo after govulncheck...
-      #- cd $workdir      
+      - govulncheck -json ./... > golang-codebuild-aws-govulncheck-results.json
+      - echo after govulncheck... 
       - pwd
       - ls -la      
-    finally:
-      - echo will continue process even if there are errors.
 
 artifacts:
   files:
     - app
     - buildspec.yml
+    - golang-codebuild-aws-govulncheck-results.json
 
 
 
