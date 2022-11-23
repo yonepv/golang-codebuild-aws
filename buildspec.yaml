@@ -9,7 +9,7 @@ phases:
       # install govulncheck to scan code
       - echo install govulncheck
       - go install golang.org/x/vuln/cmd/govulncheck@latest   
-      - cp $GOPATH/bin/govulncheck /usr/local/bin/
+      #- cp $GOPATH/bin/govulncheck /usr/local/bin/
       - workdir=`pwd`
       - echo $workdir
       - ls -la       
