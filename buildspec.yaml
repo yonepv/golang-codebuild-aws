@@ -6,14 +6,40 @@ phases:
     commands:
       - go get -u golang.org/x/lint/golint
 
+      # install govulncheck to scan code
+      - echo install govulncheck
+      - go install golang.org/x/vuln/cmd/govulncheck@latest   
+      - cp $GOPATH/bin/govulncheck /usr/local/bin/
+      - workdir=`pwd`
+      - echo $workdir
+      - ls -la       
+
   pre_build: 
     commands:
       - golint -set_exit_status
-      - go test
+      - go test      
 
   build:
     commands:
       - go build -o app
+      - echo gopath $GOPATH
+      # Vulnerability detection using govulncheck
+      #- govulncheck
+      - which govulncheck
+      #- .$GOPATH/bin/govulncheck ./...
+      - echo trying to execute govulncheck on project
+      #- .$GOPATH/bin/govulncheck -json ./...
+      #- govulncheck -json ./...
+      #- cd $GOPATH/bin      
+      #- pwd
+      #- ls -la
+      - currentphase="govulncheck"
+      # with -json option gave exit code 137 -> out of memory!
+      - govulncheck ./...      
+      - echo after govulncheck...
+      #- cd $workdir      
+      - pwd
+      - ls -la      
 
 artifacts:
   files:
